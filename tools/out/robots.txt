@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://ttxs69.github.io/ai-trends/sitemap.xml

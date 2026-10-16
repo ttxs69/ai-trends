@@ -11,6 +11,7 @@ LEDGER = sys.argv[1] if len(sys.argv) > 1 else os.path.expanduser("~/daily-ledge
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "out")
 os.makedirs(os.path.join(OUT, "daily"), exist_ok=True)
+os.makedirs(os.path.join(OUT, "weekly"), exist_ok=True)
 NOW = datetime.now()
 
 # --- config: fill in after deployment (approved) ---
