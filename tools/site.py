@@ -77,7 +77,7 @@ def sparkline_svg(points, labels, w=720, h=90, color="#4f8ef7", link_base=None):
     for i, (x, y) in enumerate(coords):
         d = labels[i]
         inner = f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3" fill="{color}"/>'
-        dots.append(f'<a href="{link_base}{d}.xhtml"' if False else inner)
+        dots.append(f'<a href="{link_base}{d}.html"' if False else inner)
     area = path + f" L {w} {h} L 0 {h} Z"
     return (f'<svg class="spark" viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg" role="img">'
             f'<path d="{area}" fill="{color}" opacity="0.12"/>'
@@ -119,21 +119,21 @@ def build_daily_page(date, raw, arx, summ):
         + f"<p>{esc(p['abstract'][:180])}…</p></div>"
         for p, cn in picked)
     top_line = esc((summ or {}).get("top", f"今日 {len(papers)} 篇 AI 论文。"))
-    nav_prev = f"{SITE_BASE}/daily/{prev_day(date)}.xhtml" if False else f"{prev_day(date)}.xhtml"
-    return f"""<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+    nav_prev = f"{SITE_BASE}/daily/{prev_day(date)}.html" if False else f"{prev_day(date)}.html"
+    return f"""<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AI 日报 · {date} | AI Trends Radar</title>
-<meta name="description" content="{top_line}">
+<meta name="description" content="{top_line}"/>
 <style>{STYLE}</style></head><body>
 <h1>AI 日报 · {date}</h1>
-<p class="meta">{top_line} · <a href="../index.xhtml">« 返回总览</a></p>
+<p class="meta">{top_line} · <a href="../index.html">« 返回总览</a></p>
 <h2>今日精选论文（arXiv）</h2>
 <div class="cards">{paper_cards}</div>
 <h2>GitHub Trending TOP</h2>
 <table><tr><th>仓库</th><th>语言</th><th style="text-align:right">今日星</th></tr>{gh_rows}</table>
 <h2>Hugging Face 热门模型</h2>
 <div class="cards">{hf_cards}</div>
-<footer>数据：自动每日快照 · 自动生成，持续更新 · <a href="../index.xhtml">AI Trends Radar</a></footer>
+<footer>数据：自动每日快照 · 自动生成，持续更新 · <a href="../index.html">AI Trends Radar</a></footer>
 </body></html>"""
 
 def prev_day(date):
@@ -158,9 +158,9 @@ def build_index(days, raw, arx):
             if x.get("slug"): gh[x["slug"]] += 1
     # recent 5 daily links + weekly links (only days that have a generated page)
     recent = sorted(arx.keys())[-5:][::-1]
-    recent_links = "".join(f"<li><a href='daily/{d}.xhtml'>{d} 日报</a></li>" for d in recent)
+    recent_links = "".join(f"<li><a href='daily/{d}.html'>{d} 日报</a></li>" for d in recent)
     weekly_links = "".join(
-        f"<li><a href='weekly/{y}-W{w:02d}.xhtml'>{y} 年第 {w} 周</a></li>"
+        f"<li><a href='weekly/{y}-W{w:02d}.html'>{y} 年第 {w} 周</a></li>"
         for y, w in WEEKS)
     term_rows = "".join(
         f"<li>{esc(' '.join(t))} <span class='n'>×{n}</span></li>"
@@ -171,11 +171,11 @@ def build_index(days, raw, arx):
     repo_rows = "".join(
         f"<tr><td><a href='{uesc(gh_repo_url(r))}' rel='noopener'>{esc(r)}</a></td><td style='text-align:right'>{n} 次</td></tr>"
         for r, n in gh.most_common(12))
-    days_str = labels[0].replace("-", "/") + "/" + labels[-1].replace("-", "/")
-    return f"""<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+    days_str = labels[0] + " → " + labels[-1]
+    return f"""<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AI Trends Radar · arXiv × GitHub 每日趋势雷达</title>
-<meta name="description" content="每日自动追踪 arXiv AI 论文趋势与 GitHub Trending：论文量、热门主题、分类分布、开源项目热度。数据驱动，持续更新。">
+<meta name="description" content="每日自动追踪 arXiv AI 论文趋势与 GitHub Trending：论文量、热门主题、分类分布、开源项目热度。数据驱动，持续更新。"/>
 <style>{STYLE}</style></head><body>
 <h1>AI Trends Radar</h1>
 <p class="meta">arXiv × GitHub 每日趋势雷达 · 覆盖 {days_str} · 生成于 {NOW.strftime('%Y-%m-%d %H:%M')} UTC+8 · 纯静态零依赖</p>
@@ -197,14 +197,14 @@ def build_rss(days_desc):
         n = len(a.get("papers", []))
         summ = summaries_for(d)
         top = (summ or {}).get("top", f"{n} papers")
-        link = f"{SITE_BASE}/daily/{d}.xhtml" if SITE_BASE else f"/daily/{d}.xhtml"
+        link = f"{SITE_BASE}/daily/{d}.html" if SITE_BASE else f"/daily/{d}.html"
         items.append(f"""<item><title>AI 日报 {d}</title><link>{link}</link>
 <guid isPermaLink="false">ai-trends-{d}</guid>
 <pubDate>{rfc822(d)}</pubDate><description>{esc(top)} · GitHub TOP: {esc(', '.join(x['slug'] for x in r.get('gh',[])[:3]))}</description></item>""")
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"><channel>
 <title>AI Trends Radar</title>
-<link>{SITE_BASE}/index.xhtml</link>
+<link>{SITE_BASE}/index.html</link>
 <description>每日 arXiv × GitHub AI 趋势</description>
 <language>zh-cn</language><lastBuildDate>{NOW.strftime('%a, %d %b %Y %H:%M:%S +0800')}</lastBuildDate>
 {"".join(items)}</channel></rss>"""
@@ -225,17 +225,17 @@ if __name__ == "__main__":
     from datetime import datetime as _dt
     WEEKS = sorted({(_dt.strptime(d, "%Y-%m-%d").isocalendar()[0],
                      _dt.strptime(d, "%Y-%m-%d").isocalendar()[1]) for d in arx.keys()})[-6:][::-1]
-    pages = ["index.xhtml"]
+    pages = ["index.html"]
     # Only emit a daily page when the day is COMPLETE (has arXiv data).
     # Days with only gh/hf raw (arXiv cron not yet run) would render "今日 0 篇".
     for d in sorted(raw.keys()):
         if d in arx:
             page = build_daily_page(d, raw[d], arx.get(d, {}), summaries_for(d))
-            with open(os.path.join(OUT, "daily", d + ".xhtml"), "w") as f:
+            with open(os.path.join(OUT, "daily", d + ".html"), "w") as f:
                 f.write(page)
-            pages.append(f"daily/{d}.xhtml")
-    pages += [f"weekly/{y}-W{w:02d}.xhtml" for y, w in WEEKS]
-    with open(os.path.join(OUT, "index.xhtml"), "w") as f:
+            pages.append(f"daily/{d}.html")
+    pages += [f"weekly/{y}-W{w:02d}.html" for y, w in WEEKS]
+    with open(os.path.join(OUT, "index.html"), "w") as f:
         f.write(build_index(sorted(arx.keys()), raw, arx))
     with open(os.path.join(OUT, "rss.xml"), "w") as f:
         f.write(build_rss(sorted(raw.keys())[::-1]))

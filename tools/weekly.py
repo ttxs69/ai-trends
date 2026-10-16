@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Weekly analysis page generator for AI Trends Radar.
-Reads daily-ledger data, produces out/weekly/2026-W42.xhtml etc.
+Reads daily-ledger data, produces out/weekly/2026-W42.html etc.
 Data-driven sections: weekly paper-volume change, top bigram trend vs prior week,
 GH repos with >1 trending appearance, HF models repeat appearances, and a
 data-backed paper list (papers listed in 3+ consecutive days' summaries).
@@ -120,10 +120,10 @@ def build_week(y, w):
             f"<p>{S.esc(p['abstract'][:150])}…</p></div>")
     # daily links
     daily_links = "".join(
-        f"<li><a href='../daily/{d}.xhtml'>{d}</a> · {len(arx.get(d, {}).get('papers', []))} 篇</li>"
+        f"<li><a href='../daily/{d}.html'>{d}</a> · {len(arx.get(d, {}).get('papers', []))} 篇</li>"
         for d in have)
     wk_label = f"{y} 年第 {w} 周"
-    day_links_str = "、".join(f"<a href='../daily/{d}.xhtml'>{d[5:]}</a>" for d in have)
+    day_links_str = "、".join(f"<a href='../daily/{d}.html'>{d[5:]}</a>" for d in have)
     ri_rows = "".join(
         f"<tr><td>{S.esc(' '.join(t))} <span class='n'>{pn}→{n}</span></td></tr>"
         for t, n, pn in rising)
@@ -134,13 +134,13 @@ def build_week(y, w):
         f"<tr><td><a href='https://huggingface.co/{S.uesc(m)}' rel='noopener'>{S.esc(m)}</a></td>"
         f"<td style='text-align:right'>{n} 天</td></tr>" for m, n in hf_top)
     days_covered = "、".join(have)
-    return f"""<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+    return f"""<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AI 趋势周报 · {wk_label} | AI Trends Radar</title>
-<meta name="description" content="{wk_label}（{days_covered}）：论文量 {n_this} 篇（周环比 {delta}），GitHub/HF 热门延续榜，精选论文势头榜。数据驱动自动生成。">
+<meta name="description" content="{wk_label}（{days_covered}）：论文量 {n_this} 篇（周环比 {delta}），GitHub/HF 热门延续榜，精选论文势头榜。数据驱动自动生成。"/>
 <style>{S.STYLE}</style></head><body>
 <h1>AI 趋势周报 · {wk_label}</h1>
-<p class="meta">覆盖 {days_covered} · 生成于 {NOW.strftime('%Y-%m-%d %H:%M')} · <a href="../index.xhtml">« 返回总览</a></p>
+<p class="meta">覆盖 {days_covered} · 生成于 {NOW.strftime('%Y-%m-%d %H:%M')} · <a href="../index.html">« 返回总览</a></p>
 <h2>本周概览</h2>
 <table>
 <tr><td>论文量</td><td style='text-align:right'>{n_this} 篇</td></tr>
@@ -157,7 +157,7 @@ def build_week(y, w):
 <div class="cards">{"".join(momentum_cards)}</div>
 <h2>本周日报</h2>
 <ol>{daily_links}</ol>
-<footer>数据：自动每日快照 · 自动生成 · <a href="../index.xhtml">AI Trends Radar</a></footer>
+<footer>数据：自动每日快照 · 自动生成 · <a href="../index.html">AI Trends Radar</a></footer>
 </body></html>"""
 
 if __name__ == "__main__":
@@ -167,10 +167,10 @@ if __name__ == "__main__":
     weeks = sorted({isocal(datetime.strptime(d, "%Y-%m-%d").date()) for d in all_days}, reverse=True)
     pages = []
     for (w, y) in weeks[:6]:
-        fpath = os.path.join(OUT, f"{y}-W{w:02d}.xhtml")
+        fpath = os.path.join(OUT, f"{y}-W{w:02d}.html")
         page = build_week(y, w)
         if page:
             with open(fpath, "w") as fh: fh.write(page)
-            pages.append(f"weekly/{y}-W{w:02d}.xhtml")
+            pages.append(f"weekly/{y}-W{w:02d}.html")
     print(f"OK: {len(pages)} weekly pages -> {OUT}")
     for p in pages: print(" ", p)
