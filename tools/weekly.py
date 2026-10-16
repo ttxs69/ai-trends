@@ -57,7 +57,7 @@ def week_days(y, w):
 
 def build_week(y, w):
     days = week_days(y, w)
-    have = [d for d in days if d in arx or d in raw]
+    have = [d for d in days if d in arx]  # only days with complete data get daily pages
     if not have:
         return None
     prev_week = week_days(*( (y, w-1) if w > 1 else (y-1, 52) ))
