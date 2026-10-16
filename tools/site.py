@@ -15,6 +15,10 @@ NOW = datetime.now()
 
 # --- config: fill in after deployment (approved) ---
 SITE_URL = os.environ.get("SITE_URL", "")  # e.g. https://ttxs69.github.io/ai-trends
+# 广告位：填入 AdSense client（如 ca-pub-XXXX）后自动激活；为空则完全无广告代码
+AD_CLIENT = os.environ.get("AD_CLIENT", "")
+AD_SLOT_INDEX = os.environ.get("AD_SLOT_INDEX", "")   # 首页横幅位
+AD_SLOT_DAILY = os.environ.get("AD_SLOT_DAILY", "")   # 日报页文中位
 SITE_BASE = SITE_URL.rstrip("/") if SITE_URL else ""
 
 STOP = set("""a an the and or of for in on to with via from into using based toward towards
@@ -93,6 +97,36 @@ def sparkline_svg(points, labels, w=720, h=90, color="#4f8ef7", link_base=None):
             + '<text x="{:.0f}" y="88" font-size="10" fill="#888" text-anchor="middle">{}</text>'.format(w/2, labels[len(labels)//2])
             + '<text x="{:.0f}" y="88" font-size="10" fill="#888" text-anchor="end">{}</text>'.format(w-2, labels[-1]) + "</svg>")
 
+
+def ad_block(slot, style="display:block"):
+    """AdSense 单元；AD_CLIENT 为空时返回空串（站点零广告残留）。"""
+    if not (AD_CLIENT and slot): return ""
+    return (f'<ins class="adsbygoogle" style="{style}" data-ad-client="{AD_CLIENT}" '
+            f'data-ad-slot="{slot}" data-ad-format="auto" data-full-width-responsive="true"></ins>'
+            '<script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>')
+
+def adsense_head():
+    if not AD_CLIENT: return ""
+    return (f'<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={AD_CLIENT}" '
+            'crossorigin="anonymous"></script>')
+
+def json_ld_index():
+    import json as _j
+    return ('<script type="application/ld+json">' + _j.dumps({
+        "@context": "https://schema.org", "@type": "WebSite",
+        "name": "AI Trends Radar", "url": f"{SITE_BASE}/index.html",
+        "description": "arXiv x GitHub 每日 AI 趋势雷达",
+        "inLanguage": "zh-CN"}, ensure_ascii=False) + "</script>")
+
+def json_ld_daily(date, top_line, n_papers):
+    import json as _j
+    return ('<script type="application/ld+json">' + _j.dumps({
+        "@context": "https://schema.org", "@type": "Article",
+        "headline": f"AI 日报 · {date}", "datePublished": date,
+        "url": f"{SITE_BASE}/daily/{date}.html",
+        "description": top_line, "inLanguage": "zh-CN",
+        "about": {"@type": "Thing", "name": f"arXiv AI papers ({n_papers})"}}, ensure_ascii=False) + "</script>")
+
 def gh_repo_url(slug): return f"https://github.com/{slug}"
 def arxiv_url(pid): return f"https://arxiv.org/abs/{pid.split('v')[0]}"
 
@@ -139,11 +173,13 @@ def build_daily_page(date, raw, arx, summ):
 <meta property="og:url" content="{SITE_BASE}/daily/{date}.html">
 <meta property="og:description" content="{top_line}">
 <meta name="description" content="{top_line}"/>
+{adsense_head()}{json_ld_daily(date, top_line, len(papers))}
 <style>{STYLE}</style></head><body>
 <h1>AI 日报 · {date}</h1>
 <p class="meta">{top_line} · <a href="../index.html">« 返回总览</a></p>
 <h2>今日精选论文（arXiv）</h2>
 <div class="cards">{paper_cards}</div>
+{ad_block(AD_SLOT_DAILY)}
 <h2>GitHub Trending TOP</h2>
 <table><tr><th>仓库</th><th>语言</th><th style="text-align:right">今日星</th></tr>{gh_rows}</table>
 <h2>Hugging Face 热门模型</h2>
@@ -197,6 +233,7 @@ def build_index(days, raw, arx):
 <meta property="og:url" content="{SITE_BASE}/index.html">
 <meta property="og:description" content="每日自动追踪 arXiv AI 论文趋势与 GitHub Trending：论文量、热门主题、分类分布、开源项目热度。数据驱动，持续更新。">
 <meta name="description" content="每日自动追踪 arXiv AI 论文趋势与 GitHub Trending：论文量、热门主题、分类分布、开源项目热度。数据驱动，持续更新。"/>
+{adsense_head()}{json_ld_index()}
 <style>{STYLE}</style></head><body>
 <h1>AI Trends Radar</h1>
 <p class="meta">arXiv × GitHub 每日趋势雷达 · 覆盖 {days_str} · 生成于 {NOW.strftime('%Y-%m-%d %H:%M')} UTC+8 · 纯静态零依赖</p>
@@ -207,6 +244,7 @@ def build_index(days, raw, arx):
 <p class="meta">{labels[0]} → {labels[-1]}，峰值 {max(vals)} 篇，近 7 日均值 {sum(vals[-7:])/min(7,len(vals)):.1f} 篇</p>
 <h2>热门主题（标题高频词对）</h2><ol style="columns:2">{term_rows}</ol>
 <h2>分类分布（累计）</h2><table><tr><th>分类</th><th style="text-align:right">篇数</th></tr>{cat_rows}</table>
+{ad_block(AD_SLOT_INDEX)}
 <h2>GitHub Trending 常客（4 周上榜次数）</h2><table><tr><th>仓库</th><th style="text-align:right">上榜</th></tr>{repo_rows}</table>
 <footer>由 <a href="https://github.com/ttxs69" rel="noopener">ttxs69</a> 自动生成 · 数据仅供研究 · 每日更新</footer>
 </body></html>"""
