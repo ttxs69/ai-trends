@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+<title>AI Trends Radar</title>
+<link>https://ttxs69.github.io/ai-trends/index.xhtml</link>
+<description>每日 arXiv × GitHub AI 趋势</description>
+<language>zh-cn</language><lastBuildDate>Fri, 16 Oct 2026 08:36:04 +0800</lastBuildDate>
+<item><title>AI 日报 2026-10-16</title><link>https://ttxs69.github.io/ai-trends/daily/2026-10-16.xhtml</link>
+<guid isPermaLink="false">ai-trends-2026-10-16</guid>
+<pubDate>Fri, 16 Oct 2026 09:37:00 +0800</pubDate><description>0 papers · GitHub TOP: morluto/rea, anthropics/claude-plugins-official, K-Dense-AI/scientific-agent-skills</description></item><item><title>AI 日报 2026-10-15</title><link>https://ttxs69.github.io/ai-trends/daily/2026-10-15.xhtml</link>
+<guid isPermaLink="false">ai-trends-2026-10-15</guid>
+<pubDate>Thu, 15 Oct 2026 09:37:00 +0800</pubDate><description>今日89篇：自进化与长时程Agent领跑，机器人、安全与记忆治理成热点。 · GitHub TOP: morluto/rea, debpalash/VoiceStudio, mksglu/context-mode</description></item><item><title>AI 日报 2026-10-14</title><link>https://ttxs69.github.io/ai-trends/daily/2026-10-14.xhtml</link>
+<guid isPermaLink="false">ai-trends-2026-10-14</guid>
+<pubDate>Wed, 14 Oct 2026 09:37:00 +0800</pubDate><description>提出VEPA：以可验证演化形式策略为LLM Agent构建终身护栏，决策可审查、可复现且确定 · GitHub TOP: morluto/rea, bilawalsidhu/gods-eye-view, debpalash/VoiceStudio</description></item><item><title>AI 日报 2026-10-13</title><link>https://ttxs69.github.io/ai-trends/daily/2026-10-13.xhtml</link>
+<guid isPermaLink="false">ai-trends-2026-10-13</guid>
+<pubDate>Tue, 13 Oct 2026 09:37:00 +0800</pubDate><description>今日 60 篇 AI-Agent 新作：RATED 可靠工具检索、X-AgentRed 个人 Agent 红队测试、BT-Agent 车载机器人部署，以及 7 篇 coding agent 训练与验证新基准。 · GitHub TOP: morluto/rea, bilawalsidhu/gods-eye-view, mksglu/context-mode</description></item><item><title>AI 日报 2026-10-12</title><link>https://ttxs69.github.io/ai-trends/daily/2026-10-12.xhtml</link>
+<guid isPermaLink="false">ai-trends-2026-10-12</guid>
+<pubDate>Mon, 12 Oct 2026 09:37:00 +0800</pubDate><description>0 papers · GitHub TOP: morluto/rea, boykopovar/AnyPS5, storytold/artcraft</description></item><item><title>AI 日报 2026-10-11</title><link>https://ttxs69.github.io/ai-trends/daily/2026-10-11.xhtml</link>
+<guid isPermaLink="false">ai-trends-2026-10-11</guid>
+<pubDate>Sun, 11 Oct 2026 09:37:00 +0800</pubDate><description>0 papers · GitHub TOP: morluto/rea, boykopovar/AnyPS5, storytold/artcraft</description></item><item><title>AI 日报 2026-10-10</title><link>https://ttxs69.github.io/ai-trends/daily/2026-10-10.xhtml</link>
+<guid isPermaLink="false">ai-trends-2026-10-10</guid>
+<pubDate>Sat, 10 Oct 2026 09:37:00 +0800</pubDate><description>今日65篇：Agent安全事件复盘与skill供应链追踪、自改进与verifier共演化、空间智能与医疗Agent等新基准与新框架 · GitHub TOP: morluto/rea, boykopovar/AnyPS5, mattpocock/skills</description></item><item><title>AI 日报 2026-10-09</title><link>https://ttxs69.github.io/ai-trends/daily/2026-10-09.xhtml</link>
+<guid isPermaLink="false">ai-trends-2026-10-09</guid>
+<pubDate>Fri, 09 Oct 2026 09:37:00 +0800</pubDate><description>今日 56 篇精选：SciExam for ENSO 让 Agent 构建气候模型、RobotWorld 机器人测试台、SkillForge 技能共进化｜覆盖 agent 训练、安全攻防、多智能体与工具机制。 · GitHub TOP: boykopovar/AnyPS5, cathrynlavery/diagram-design, morluto/rea</description></item><item><title>AI 日报 2026-10-08</title><link>https://ttxs69.github.io/ai-trends/daily/2026-10-08.xhtml</link>
+<guid isPermaLink="false">ai-trends-2026-10-08</guid>
+<pubDate>Thu, 08 Oct 2026 09:37:00 +0800</pubDate><description>今日66篇：agent自进化与记忆成主线，multi-agent编排、安全评测与具身基准全面开花 · GitHub TOP: morluto/rea, mattpocock/skills, boykopovar/AnyPS5</description></item><item><title>AI 日报 2026-10-07</title><link>https://ttxs69.github.io/ai-trends/daily/2026-10-07.xhtml</link>
+<guid isPermaLink="false">ai-trends-2026-10-07</guid>
+<pubDate>Wed, 07 Oct 2026 09:37:00 +0800</pubDate><description>今日 105 篇 AI-Agent 新作：prompt injection 攻防、agent 安全审计与 harness/环境工程双主线 · GitHub TOP: tester-army/e2e, mattpocock/skills, earthtojake/text-to-cad</description></item></channel></rss>
