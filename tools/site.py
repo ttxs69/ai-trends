@@ -224,7 +224,7 @@ if __name__ == "__main__":
     all_days = sorted(set(list(arx.keys()) + list(raw.keys())))
     from datetime import datetime as _dt
     WEEKS = sorted({(_dt.strptime(d, "%Y-%m-%d").isocalendar()[0],
-                     _dt.strptime(d, "%Y-%m-%d").isocalendar()[1]) for d in all_days})[-6:][::-1]
+                     _dt.strptime(d, "%Y-%m-%d").isocalendar()[1]) for d in arx.keys()})[-6:][::-1]
     pages = ["index.xhtml"]
     # Only emit a daily page when the day is COMPLETE (has arXiv data).
     # Days with only gh/hf raw (arXiv cron not yet run) would render "今日 0 篇".
