@@ -126,14 +126,14 @@ def build_daily_page(date, raw, arx, summ):
 <meta name="description" content="{top_line}">
 <style>{STYLE}</style></head><body>
 <h1>AI 日报 · {date}</h1>
-<p class="meta">{top_line} · <a href="index.xhtml">« 返回总览</a></p>
+<p class="meta">{top_line} · <a href="../index.xhtml">« 返回总览</a></p>
 <h2>今日精选论文（arXiv）</h2>
 <div class="cards">{paper_cards}</div>
 <h2>GitHub Trending TOP</h2>
 <table><tr><th>仓库</th><th>语言</th><th style="text-align:right">今日星</th></tr>{gh_rows}</table>
 <h2>Hugging Face 热门模型</h2>
 <div class="cards">{hf_cards}</div>
-<footer>数据：自动每日快照 · 自动生成，持续更新 · <a href="index.xhtml">AI Trends Radar</a></footer>
+<footer>数据：自动每日快照 · 自动生成，持续更新 · <a href="../index.xhtml">AI Trends Radar</a></footer>
 </body></html>"""
 
 def prev_day(date):
@@ -156,8 +156,8 @@ def build_index(days, raw, arx):
     for r in raw.values():
         for x in r.get("gh", []):
             if x.get("slug"): gh[x["slug"]] += 1
-    # recent 5 daily links + weekly links
-    recent = sorted(raw.keys())[-5:][::-1]
+    # recent 5 daily links + weekly links (only days that have a generated page)
+    recent = sorted(arx.keys())[-5:][::-1]
     recent_links = "".join(f"<li><a href='daily/{d}.xhtml'>{d} 日报</a></li>" for d in recent)
     weekly_links = "".join(
         f"<li><a href='weekly/{y}-W{w:02d}.xhtml'>{y} 年第 {w} 周</a></li>"
@@ -192,7 +192,7 @@ def build_index(days, raw, arx):
 
 def build_rss(days_desc):
     items = []
-    for d in days_desc[:10]:
+    for d in [x for x in days_desc[:10] if x in arx]:  # only days with generated pages
         a = arx.get(d, {}); r = raw.get(d, {})
         n = len(a.get("papers", []))
         summ = summaries_for(d)
