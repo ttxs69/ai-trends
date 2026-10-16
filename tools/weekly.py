@@ -56,6 +56,8 @@ def week_days(y, w):
     return [(mon + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(7)]
 
 def build_week(y, w):
+    fname = f"{y}-W{w:02d}"
+    SITE_BASE = S.SITE_BASE
     days = week_days(y, w)
     have = [d for d in days if d in arx]  # only days with complete data get daily pages
     if not have:
@@ -137,6 +139,8 @@ def build_week(y, w):
     return f"""<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AI 趋势周报 · {wk_label} | AI Trends Radar</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%232563eb%27/%3E%3Cpath d=%27M7 24 14 13l5 6 6-11%27 stroke=%27%23fff%27 stroke-width=%273%27 fill=%27none%27/%3E%3C/svg%3E">
+<link rel="canonical" href="{SITE_BASE}/weekly/{fname}.html">
 <meta name="description" content="{wk_label}（{days_covered}）：论文量 {n_this} 篇（周环比 {delta}），GitHub/HF 热门延续榜，精选论文势头榜。数据驱动自动生成。"/>
 <style>{S.STYLE}</style></head><body>
 <h1>AI 趋势周报 · {wk_label}</h1>

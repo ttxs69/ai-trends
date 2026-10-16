@@ -49,8 +49,15 @@ def summaries_for(date):
 def cat_name(c):
     m = {"cs.AI": "人工智能", "cs.CL": "计算语言学", "cs.LG": "机器学习", "cs.RO": "机器人",
          "cs.CV": "计算机视觉", "cs.MA": "多智能体系统", "cs.HC": "人机交互", "cs.CR": "安全密码学",
-         "cs.SE": "软件工程", "cs.NI": "网络", "stat.ML": "统计学习", "eess.SY": "系统控制"}
-    return m.get(c, c)
+         "cs.SE": "软件工程", "cs.NI": "网络", "stat.ML": "统计学习", "eess.SY": "系统控制",
+         "cs.DC": "分布式计算", "cs.AR": "体系结构", "cs.DB": "数据库", "cs.IR": "信息检索",
+         "cs.PL": "编程语言", "cs.SD": "声音", "cs.CG": "计算几何", "cs.NE": "神经进化",
+         "cs.IT": "信息论", "cs.CY": "计算与社会", "cs.LO": "逻辑", "cs.PF": "性能",
+         "cs.DL": "数字图书馆", "cs.MM": "多媒体", "cs.GT": "博弈论", "cs.OS": "操作系统",
+         "cs.SC": "科学计算", "cs.SI": "社会计算", "eess.AS": "音频信号", "eess.IV": "图像视频",
+         "eess.SP": "信号处理", "math.OC": "最优控制", "q-bio": "定量生物", "physics": "物理",
+         "stat.AP": "统计应用", "stat.TH": "统计理论", "I.2": "人工智能(旧码)"}
+    return m.get(c, "")
 
 STYLE = """
 body{font-family:system-ui,-apple-system,'Noto Sans SC',sans-serif;max-width:780px;margin:2rem auto;padding:0 1rem;color:#222;background:#fafafa}
@@ -81,7 +88,10 @@ def sparkline_svg(points, labels, w=720, h=90, color="#4f8ef7", link_base=None):
     area = path + f" L {w} {h} L 0 {h} Z"
     return (f'<svg class="spark" viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg" role="img">'
             f'<path d="{area}" fill="{color}" opacity="0.12"/>'
-            f'<path d="{path}" fill="none" stroke="{color}" stroke-width="2"/>' + "".join(dots) + "</svg>")
+            f'<path d="{path}" fill="none" stroke="{color}" stroke-width="2"/>' + "".join(dots)
+            + '<text x="2" y="88" font-size="10" fill="#888">{}</text>'.format(labels[0])
+            + '<text x="{:.0f}" y="88" font-size="10" fill="#888" text-anchor="middle">{}</text>'.format(w/2, labels[len(labels)//2])
+            + '<text x="{:.0f}" y="88" font-size="10" fill="#888" text-anchor="end">{}</text>'.format(w-2, labels[-1]) + "</svg>")
 
 def gh_repo_url(slug): return f"https://github.com/{slug}"
 def arxiv_url(pid): return f"https://arxiv.org/abs/{pid.split('v')[0]}"
@@ -123,6 +133,11 @@ def build_daily_page(date, raw, arx, summ):
     return f"""<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AI 日报 · {date} | AI Trends Radar</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%232563eb%27/%3E%3Cpath d=%27M7 24 14 13l5 6 6-11%27 stroke=%27%23fff%27 stroke-width=%273%27 fill=%27none%27/%3E%3C/svg%3E"><link rel="canonical" href="{SITE_BASE}/daily/{date}.html">
+<meta property="og:title" content="AI 日报 · {date} | AI Trends Radar">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{SITE_BASE}/daily/{date}.html">
+<meta property="og:description" content="{top_line}">
 <meta name="description" content="{top_line}"/>
 <style>{STYLE}</style></head><body>
 <h1>AI 日报 · {date}</h1>
@@ -166,7 +181,7 @@ def build_index(days, raw, arx):
         f"<li>{esc(' '.join(t))} <span class='n'>×{n}</span></li>"
         for t, n in bi.most_common(18) if n >= 4)
     cat_rows = "".join(
-        f"<tr><td><code>{esc(c)}</code> {esc(cat_name(c))}</td><td style='text-align:right'>{n}</td></tr>"
+        (f"<tr><td><code>{esc(c)}</code> {esc(cat_name(c))}</td><td style='text-align:right'>{n}</td></tr>" if cat_name(c) else f"<tr><td><code>{esc(c)}</code></td><td style='text-align:right'>{n}</td></tr>")
         for c, n in cats.most_common(10))
     repo_rows = "".join(
         f"<tr><td><a href='{uesc(gh_repo_url(r))}' rel='noopener'>{esc(r)}</a></td><td style='text-align:right'>{n} 次</td></tr>"
@@ -175,6 +190,12 @@ def build_index(days, raw, arx):
     return f"""<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>AI Trends Radar · arXiv × GitHub 每日趋势雷达</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%232563eb%27/%3E%3Cpath d=%27M7 24 14 13l5 6 6-11%27 stroke=%27%23fff%27 stroke-width=%273%27 fill=%27none%27/%3E%3C/svg%3E">
+<link rel="canonical" href="{SITE_BASE}/index.html">
+<meta property="og:title" content="AI Trends Radar · arXiv × GitHub 每日趋势雷达">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{SITE_BASE}/index.html">
+<meta property="og:description" content="每日自动追踪 arXiv AI 论文趋势与 GitHub Trending：论文量、热门主题、分类分布、开源项目热度。数据驱动，持续更新。">
 <meta name="description" content="每日自动追踪 arXiv AI 论文趋势与 GitHub Trending：论文量、热门主题、分类分布、开源项目热度。数据驱动，持续更新。"/>
 <style>{STYLE}</style></head><body>
 <h1>AI Trends Radar</h1>
@@ -241,4 +262,23 @@ if __name__ == "__main__":
         f.write(build_rss(sorted(raw.keys())[::-1]))
     with open(os.path.join(OUT, "sitemap.xml"), "w") as f:
         f.write(build_sitemap(pages))
-    print(f"OK: {len(pages)} pages -> {OUT} (index + {len(pages)-1} daily), rss.xml, sitemap.xml")
+    # robots.txt
+    with open(os.path.join(OUT, "robots.txt"), "w") as f:
+        f.write(f"User-agent: *\nAllow: /\nSitemap: {SITE_BASE}/sitemap.xml\n")
+    # redirect stubs for legacy .xhtml URLs (must be VALID XML: self-closed tags)
+    REDIR = ('<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE html>'
+             '<html xmlns="http://www.w3.org/1999/xhtml"><head>'
+             '<meta http-equiv="refresh" content="0;url={tgt}"/>'
+             '<link rel="canonical" href="{tgt}"/>'
+             '<title>moved</title></head><body><p>moved to <a href="{tgt}">{tgt}</a></p></body></html>')
+    stubs = 0
+    for d in sorted(raw.keys()):
+        if d in arx:
+            with open(os.path.join(OUT, "daily", d + ".xhtml"), "w") as f:
+                f.write(REDIR.format(tgt=f"{SITE_BASE}/daily/{d}.html")); stubs += 1
+    with open(os.path.join(OUT, "index.xhtml"), "w") as f:
+        f.write(REDIR.format(tgt=f"{SITE_BASE}/index.html")); stubs += 1
+    for y, w in WEEKS:
+        with open(os.path.join(OUT, "weekly", f"{y}-W{w:02d}.xhtml"), "w") as f:
+            f.write(REDIR.format(tgt=f"{SITE_BASE}/weekly/{y}-W{w:02d}.html")); stubs += 1
+    print(f"OK: {len(pages)} pages -> {OUT}, rss, sitemap, robots.txt, {stubs} xhtml-redirect stubs")
