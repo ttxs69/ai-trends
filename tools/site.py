@@ -226,8 +226,10 @@ if __name__ == "__main__":
     WEEKS = sorted({(_dt.strptime(d, "%Y-%m-%d").isocalendar()[0],
                      _dt.strptime(d, "%Y-%m-%d").isocalendar()[1]) for d in all_days})[-6:][::-1]
     pages = ["index.xhtml"]
+    # Only emit a daily page when the day is COMPLETE (has arXiv data).
+    # Days with only gh/hf raw (arXiv cron not yet run) would render "今日 0 篇".
     for d in sorted(raw.keys()):
-        if d in arx or raw[d].get("gh"):
+        if d in arx:
             page = build_daily_page(d, raw[d], arx.get(d, {}), summaries_for(d))
             with open(os.path.join(OUT, "daily", d + ".xhtml"), "w") as f:
                 f.write(page)
